@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import twitterLogo from './assets/twitter-logo.svg';
+import CandyMachine from './CandyMachine';
 
 // Constants
 const TWITTER_HANDLE = '_buildspace';
@@ -28,7 +29,17 @@ const App = () => {
     }
   }
 
-  const connectWallet = async () => { };
+  const connectWallet = async () => {
+
+    const { solana } = window;
+    if (solana) {
+      const response = await solana.connect();
+
+      console.log("Connected", response.publicKey.toString());
+      setWalletAddress(response.publicKey.toString());
+
+    }
+  };
 
   const renderNotConnectedContainer = () => (
     <button
@@ -55,8 +66,9 @@ const App = () => {
           <p className="header">🍭 Candy Drop</p>
           <p className="sub-text">NFT drop machine with fair mint</p>
           {!walletAddress && renderNotConnectedContainer()}
-
         </div>
+
+        {walletAddress && <CandyMachine walletAddress={window.solana} />}
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
